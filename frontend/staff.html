@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Attendance Dashboard</title>
+
+  <style>
+    body { font-family: Arial; margin:0; background:#f4f6f8; }
+
+    .topbar {
+      background:#2c3e50;
+      color:white;
+      padding:15px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .topbar button {
+      margin-left:10px;
+      padding:6px 10px;
+      border:none;
+      border-radius:5px;
+      background:#3498db;
+      color:white;
+      cursor:pointer;
+    }
+
+    .container { padding:20px; }
+
+    table {
+      width:100%;
+      background:white;
+      border-collapse:collapse;
+    }
+
+    th, td {
+      border:1px solid #ddd;
+      padding:10px;
+      text-align:center;
+    }
+
+    th { background:#3498db; color:white; }
+
+    button { cursor:pointer; padding:5px 8px; }
+
+    .add { background:green; color:white; }
+    .save { background:#2980b9; color:white; }
+    .excel { background:orange; color:white; }
+
+    .modal {
+      display:none;
+      position:fixed;
+      width:100%; height:100%;
+      background:rgba(0,0,0,0.5);
+    }
+
+    .box {
+      background:white;
+      width:300px;
+      margin:120px auto;
+      padding:20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div>🎓 Attendance System</div>
+
+  <div>
+    <button onclick="goHome()">🏠 Home</button>
+    <button onclick="logout()">🚪 Logout</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <input type="date" id="date">
+
+  <button class="add" onclick="openAdd()">➕ Add Student</button>
+  <button class="save" onclick="save()">💾 Save</button>
+
+  <!-- 🔥 NEW EXPORT BUTTON -->
+  <button class="excel" onclick="exportExcel()">📥 Export Excel</button>
+
+  <br><br>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Roll</th>
+        <th>Status</th>
+        <th>%</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody id="table"></tbody>
+  </table>
+
+</div>
+
+<!-- ADD MODAL -->
+<div class="modal" id="addModal">
+  <div class="box">
+    <h3>Add Student</h3>
+    <input id="name" placeholder="Name">
+    <input id="roll" placeholder="Roll">
+    <button onclick="add()">Save</button>
+    <button onclick="closeAdd()">Cancel</button>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal" id="editModal">
+  <div class="box">
+    <h3>Edit Student</h3>
+    <input id="ename">
+    <input id="eroll">
+    <button onclick="update()">Update</button>
+  </div>
+</div>
+
+<!-- 🔥 IMPORTANT LIBRARY -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script src="staff.js"></script>
+
+<script>
+function goHome() {
+  window.location.href = "select.html";
+}
+
+function logout() {
+  alert("Logged out ✔");
+  window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
