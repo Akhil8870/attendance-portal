@@ -12,7 +12,7 @@ window.onload = load;
 
 // ================= LOAD STUDENTS =================
 async function load() {
-  const res = await fetch(`/api/students?dept=${dept}&year=${year}&semester=${semester}&section=${section}`);
+  const res = await fetch(window.location.origin + `/api/students?dept=${dept}&year=${year}&semester=${semester}&section=${section}`);
   students = await res.json();
   render();
 }
@@ -24,10 +24,9 @@ async function render() {
 
   let attendanceMap = {};
 
-  // restore saved attendance for selected date
   if (date) {
     for (let s of students) {
-      const res = await fetch(`/api/attendance/${s._id}`);
+      const res = await fetch(window.location.origin + `/api/attendance/${s._id}`);
       const att = await res.json();
 
       const record = att.find(a => a.date === date);
@@ -42,7 +41,7 @@ async function render() {
 
   for (let s of students) {
 
-    const res = await fetch(`/api/attendance/${s._id}`);
+    const res = await fetch(window.location.origin + `/api/attendance/${s._id}`);
     const att = await res.json();
 
     let present = att.filter(a => a.status === "Present").length;
@@ -92,7 +91,7 @@ async function save() {
     const status = document.getElementById(`st-${s._id}`).value;
     if (!status) continue;
 
-    await fetch("/api/attendance", {
+    await fetch(window.location.origin + "/api/attendance", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -106,110 +105,3 @@ async function save() {
   alert("Saved ✔");
   render();
 }
-
-// ================= ADD STUDENT =================
-function openAdd() {
-  document.getElementById("addModal").style.display = "block";
-}
-
-function closeAdd() {
-  document.getElementById("addModal").style.display = "none";
-}
-
-async function add() {
-  await fetch("/api/students", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: document.getElementById("name").value,
-      rollNo: document.getElementById("roll").value,
-      dept,
-      year,
-      semester,
-      section
-    })
-  });
-
-  closeAdd();
-  load();
-}
-
-// ================= EDIT STUDENT =================
-function edit(id, name, roll) {
-  editId = id;
-  document.getElementById("ename").value = name;
-  document.getElementById("eroll").value = roll;
-  document.getElementById("editModal").style.display = "block";
-}
-
-async function update() {
-  await fetch(`/api/students/${editId}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: document.getElementById("ename").value,
-      rollNo: document.getElementById("eroll").value
-    })
-  });
-
-  document.getElementById("editModal").style.display = "none";
-  load();
-}
-
-// ================= DELETE STUDENT =================
-async function del(id) {
-  await fetch(`/api/students/${id}`, { method: "DELETE" });
-  load();
-}
-
-// ================= CLEAN EXCEL EXPORT =================
-function exportExcel() {
-
-  const date = document.getElementById("date").value;
-
-  if (!date) {
-    alert("Select a date first");
-    return;
-  }
-
-  let exportData = [];
-
-  students.forEach(s => {
-
-    const select = document.getElementById(`st-${s._id}`);
-    const status = select ? select.value : "";
-
-    if (!status) return;
-
-    exportData.push({
-      Date: date,
-      Name: s.name,
-      Roll: s.rollNo,
-      Status: status,
-      Department: dept,
-      Year: year,
-      Semester: semester,
-      Section: section
-    });
-
-  });
-
-  if (exportData.length === 0) {
-    alert("No attendance marked");
-    return;
-  }
-
-  const ws = XLSX.utils.json_to_sheet(exportData);
-  const wb = XLSX.utils.book_new();
-
-  XLSX.utils.book_append_sheet(wb, ws, "Attendance");
-
-  XLSX.writeFile(wb, `attendance_${date}.xlsx`);
-}
-
-// ================= AUTO REFRESH ON DATE CHANGE =================
-document.addEventListener("change", function(e) {
-  if (e.target.id === "date") {
-    render();
-  }
-});

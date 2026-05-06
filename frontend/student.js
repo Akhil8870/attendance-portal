@@ -1,5 +1,3 @@
-const API = "/api";
-
 async function loadStudent() {
   const roll = document.getElementById("roll").value;
 
@@ -8,7 +6,7 @@ async function loadStudent() {
     return;
   }
 
-  const res = await fetch(`${API}/student/roll/${roll}`);
+  const res = await fetch(window.location.origin + `/api/student/roll/${roll}`);
   const data = await res.json();
 
   if (data.error) {
@@ -26,18 +24,12 @@ async function loadStudent() {
   let percent = Math.round((present / total) * 100);
   let color = percent < 75 ? "red" : "green";
 
-  // =====================
-  // STUDENT INFO
-  // =====================
   document.getElementById("info").innerHTML = `
     <h3>${student.name}</h3>
     <p>Roll No: ${student.rollNo}</p>
     <p>Year: ${student.year} | Sem: ${student.semester} | Section: ${student.section}</p>
   `;
 
-  // =====================
-  // CARDS
-  // =====================
   document.getElementById("cards").innerHTML = `
     <div class="card-box">
       <h3>Total</h3>
@@ -60,9 +52,6 @@ async function loadStudent() {
     </div>
   `;
 
-  // =====================
-  // TABLE (NO HEADER HERE ❌ FIXED)
-  // =====================
   let html = "";
 
   att.forEach(a => {
@@ -78,16 +67,4 @@ async function loadStudent() {
   });
 
   document.getElementById("history").innerHTML = html;
-}
-
-// =====================
-// NAVIGATION
-// =====================
-function goHome() {
-  window.location.href = "index.html";
-}
-
-function logout() {
-  alert("Logged out ✔");
-  window.location.href = "index.html";
 }

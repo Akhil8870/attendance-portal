@@ -3,10 +3,10 @@ async function login() {
   const password = document.getElementById("password").value;
   const role = document.getElementById("role").value;
 
-  const res = await fetch("/api/auth/login", {
+  const res = await fetch(window.location.origin + "/api/auth/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password, role })
+    body: JSON.stringify({ email, password })
   });
 
   const data = await res.json();
@@ -15,10 +15,11 @@ async function login() {
 
   if (data.msg === "Login success ✔") {
 
-    if (role === "staff") {
-      window.location.href = "select.html";
+    // IMPORTANT FIX: use backend role
+    if (data.role === "staff") {
+      window.location.href = "/select.html";
     } else {
-      window.location.href = "student.html";
+      window.location.href = "/student.html";
     }
   }
 }
