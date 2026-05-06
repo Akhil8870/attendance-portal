@@ -24,9 +24,9 @@ mongoose.connect(process.env.MONGO_URI)
 .catch(err => console.log(err));
 
 // MODELS
-const User = require("./models/User");
-const Student = require("./models/Student");
-const Attendance = require("./models/Attendance");
+const User = require("./models/user");
+const Student = require("./models/student");
+const Attendance = require("./models/attendance");
 
 // ================= AUTH =================
 app.post("/api/auth/register", async (req, res) => {
