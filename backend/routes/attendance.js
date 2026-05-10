@@ -1,23 +1,51 @@
 const router = require("express").Router();
 const Attendance = require("../models/Attendance");
+const Student = require("../models/Student");
 
-router.post("/mark", async (req, res) => {
-  const data = req.body;
+router.post("/", async (req, res) => {
 
-  for (let r of data) {
-    await Attendance.findOneAndUpdate(
-      { studentId: r.studentId, date: r.date },
-      r,
-      { upsert: true }
-    );
-  }
+  const { studentId, date, status } = req.body;
 
-  res.json({ msg: "Submitted successfully" });
+  await Attendance.findOneAndUpdate(
+    { studentId, date },
+    { studentId, date, status },
+    { upsert: true }
+  );
+
+  res.json({
+    msg: "Saved"
+  });
 });
 
-router.get("/", async (req, res) => {
-  const data = await Attendance.find(req.query);
+router.get("/:studentId", async (req, res) => {
+
+  const data = await Attendance.find({
+    studentId: req.params.studentId
+  });
+
   res.json(data);
+});
+
+router.get("/student/roll/:roll", async (req, res) => {
+
+  const student = await Student.findOne({
+    rollNo: req.params.roll
+  });
+
+  if (!student) {
+    return res.json({
+      error: true
+    });
+  }
+
+  const attendance = await Attendance.find({
+    studentId: student._id
+  });
+
+  res.json({
+    student,
+    attendance
+  });
 });
 
 module.exports = router;

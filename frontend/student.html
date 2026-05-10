@@ -1,80 +1,105 @@
 <!DOCTYPE html>
 <html>
 <head>
+
   <title>Student Dashboard</title>
+
   <link rel="stylesheet" href="style.css">
 
-  <style>
-    .card-box {
-      display:inline-block;
-      background:white;
-      padding:15px;
-      margin:10px;
-      width:150px;
-      border-radius:10px;
-      box-shadow:0px 0px 10px #ccc;
-      text-align:center;
-    }
-
-    table {
-      width:90%;
-      margin:20px;
-      border-collapse:collapse;
-      background:white;
-    }
-
-    th, td {
-      border:1px solid #ddd;
-      padding:10px;
-      text-align:center;
-    }
-
-    th {
-      background:#3498db;
-      color:white;
-    }
-  </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
 <div class="navbar">
-  <div>🎓 Attendance Portal</div>
+
+  <div class="logo">
+    🎓 Student Dashboard
+  </div>
 
   <div>
-    <button onclick="goHome()">🏠 Home</button>
-    <button onclick="logout()">🚪 Logout</button>
+
+    <button onclick="goHome()">
+      🏠 Home
+    </button>
+
+    <button onclick="logout()">
+      🚪 Logout
+    </button>
+
   </div>
+
 </div>
 
-<!-- INPUT SECTION -->
-<div class="card">
-  <h2>Student Dashboard</h2>
+<div class="container">
 
-  <input type="text" id="roll" placeholder="Enter Roll Number">
-  <button onclick="loadStudent()">View Attendance</button>
+  <div class="card">
 
-  <div id="info" style="margin-top:15px;"></div>
+    <h2 style="margin-bottom:20px;">
+      Check Attendance
+    </h2>
+
+    <div class="top-controls">
+
+      <input
+      type="text"
+      id="roll"
+      placeholder="Enter Roll Number">
+
+      <button onclick="loadStudent()">
+        View Attendance
+      </button>
+
+    </div>
+
+    <div id="studentInfo"></div>
+
+  </div>
+
+  <!-- STATS -->
+
+  <div id="cards" class="stats-grid"></div>
+
+  <!-- TABLE -->
+
+  <div class="table-container">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Date</th>
+
+          <th>Status</th>
+
+          <th>Attendance %</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody id="history"></tbody>
+
+    </table>
+
+  </div>
+
 </div>
-
-<!-- STATS CARDS -->
-<div id="cards"></div>
-
-<!-- ATTENDANCE TABLE -->
-<table>
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Status</th>
-      <th>Attendance %</th>
-    </tr>
-  </thead>
-
-  <tbody id="history"></tbody>
-</table>
 
 <script src="student.js"></script>
+
+<script>
+
+function goHome() {
+  location.href = "index.html";
+}
+
+function logout() {
+  location.href = "index.html";
+}
+
+</script>
 
 </body>
 </html>

@@ -1,143 +1,172 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Attendance Dashboard</title>
+  <title>Staff Dashboard</title>
 
-  <style>
-    body { font-family: Arial; margin:0; background:#f4f6f8; }
+  <link rel="stylesheet" href="style.css">
 
-    .topbar {
-      background:#2c3e50;
-      color:white;
-      padding:15px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-    }
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-    .topbar button {
-      margin-left:10px;
-      padding:6px 10px;
-      border:none;
-      border-radius:5px;
-      background:#3498db;
-      color:white;
-      cursor:pointer;
-    }
-
-    .container { padding:20px; }
-
-    table {
-      width:100%;
-      background:white;
-      border-collapse:collapse;
-    }
-
-    th, td {
-      border:1px solid #ddd;
-      padding:10px;
-      text-align:center;
-    }
-
-    th { background:#3498db; color:white; }
-
-    button { cursor:pointer; padding:5px 8px; }
-
-    .add { background:green; color:white; }
-    .save { background:#2980b9; color:white; }
-    .excel { background:orange; color:white; }
-
-    .modal {
-      display:none;
-      position:fixed;
-      width:100%; height:100%;
-      background:rgba(0,0,0,0.5);
-    }
-
-    .box {
-      background:white;
-      width:300px;
-      margin:120px auto;
-      padding:20px;
-    }
-  </style>
 </head>
 
 <body>
 
-<!-- TOPBAR -->
-<div class="topbar">
-  <div>🎓 Attendance System</div>
+<div class="navbar">
+
+  <div class="logo">
+    🎓 Staff Dashboard
+  </div>
 
   <div>
+
+    <button onclick="goBack()">⬅ Back</button>
+
     <button onclick="goHome()">🏠 Home</button>
+
     <button onclick="logout()">🚪 Logout</button>
+
   </div>
+
 </div>
 
 <div class="container">
 
-  <input type="date" id="date">
+  <div class="top-controls">
 
-  <button class="add" onclick="openAdd()">➕ Add Student</button>
-  <button class="save" onclick="save()">💾 Save</button>
+    <input type="date" id="date">
 
-  <!-- 🔥 NEW EXPORT BUTTON -->
-  <button class="excel" onclick="exportExcel()">📥 Export Excel</button>
+    <button class="green-btn" onclick="openAdd()">
+      ➕ Add Student
+    </button>
 
-  <br><br>
+    <button class="blue-btn" onclick="saveAttendance()">
+      💾 Save Attendance
+    </button>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Roll</th>
-        <th>Status</th>
-        <th>%</th>
-        <th>Action</th>
-      </tr>
-    </thead>
+    <button class="orange-btn" onclick="exportExcel()">
+      📥 Export Excel
+    </button>
 
-    <tbody id="table"></tbody>
-  </table>
+  </div>
+
+  <div class="bulk-actions">
+
+    <label>
+      <input type="checkbox" id="selectAll">
+      Select All
+    </label>
+
+    <button onclick="bulkUpdate('Present')">
+      Present
+    </button>
+
+    <button onclick="bulkUpdate('Absent')">
+      Absent
+    </button>
+
+    <button onclick="bulkUpdate('OD')">
+      OD
+    </button>
+
+  </div>
+
+  <div class="table-container">
+
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>Select</th>
+          <th>Name</th>
+          <th>Roll No</th>
+          <th>Status</th>
+          <th>Attendance %</th>
+          <th>Actions</th>
+        </tr>
+
+      </thead>
+
+      <tbody id="table"></tbody>
+
+    </table>
+
+  </div>
 
 </div>
 
-<!-- ADD MODAL -->
+<!-- ADD STUDENT MODAL -->
+
 <div class="modal" id="addModal">
-  <div class="box">
-    <h3>Add Student</h3>
-    <input id="name" placeholder="Name">
-    <input id="roll" placeholder="Roll">
-    <button onclick="add()">Save</button>
-    <button onclick="closeAdd()">Cancel</button>
+
+  <div class="modal-content">
+
+    <h2>Add Student</h2>
+
+    <input id="name" placeholder="Student Name">
+
+    <input id="roll" placeholder="Roll Number">
+
+    <div class="modal-buttons">
+
+      <button onclick="addStudent()">
+        Save
+      </button>
+
+      <button class="danger-btn" onclick="closeAdd()">
+        Cancel
+      </button>
+
+    </div>
+
   </div>
+
 </div>
 
 <!-- EDIT MODAL -->
-<div class="modal" id="editModal">
-  <div class="box">
-    <h3>Edit Student</h3>
-    <input id="ename">
-    <input id="eroll">
-    <button onclick="update()">Update</button>
-  </div>
-</div>
 
-<!-- 🔥 IMPORTANT LIBRARY -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<div class="modal" id="editModal">
+
+  <div class="modal-content">
+
+    <h2>Edit Student</h2>
+
+    <input id="ename">
+
+    <input id="eroll">
+
+    <div class="modal-buttons">
+
+      <button onclick="updateStudent()">
+        Update
+      </button>
+
+      <button class="danger-btn" onclick="closeEdit()">
+        Cancel
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
 
 <script src="staff.js"></script>
 
 <script>
+
+function goBack() {
+  location.href = "select.html";
+}
+
 function goHome() {
-  window.location.href = "select.html";
+  location.href = "index.html";
 }
 
 function logout() {
-  alert("Logged out ✔");
-  window.location.href = "index.html";
+  location.href = "index.html";
 }
+
 </script>
 
 </body>

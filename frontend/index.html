@@ -1,104 +1,20 @@
-<link rel="stylesheet"href="style.css">
 <!DOCTYPE html>
 <html>
 <head>
   <title>Attendance Portal</title>
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: #f2f2f2;
-    }
-
-    /* HEADER */
-    .header {
-      background: #ffffff;
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid #ccc;
-    }
-
-    .header img {
-      height: 50px;
-      margin-right: 10px;
-    }
-
-    .header h3 {
-      margin: 0;
-      font-size: 18px;
-    }
-
-    .header p {
-      margin: 0;
-      font-size: 12px;
-      color: gray;
-    }
-
-    /* CENTER BOX */
-    .container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 85vh;
-    }
-
-    .login-box {
-      background: white;
-      padding: 30px;
-      width: 320px;
-      border-radius: 10px;
-      box-shadow: 0px 0px 15px #ccc;
-      text-align: center;
-    }
-
-    .login-box h2 {
-      margin-bottom: 20px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      background: green;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    button:hover {
-      background: darkgreen;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<!-- HEADER -->
-<div class="header">
-  <img src="https://th.bing.com/th/id/OIP.1Upv_ezQn5Vm72Y4wYPHpQHaBT?w=326&h=62&c=7&r=0&o=7&pid=1.7&rm=3">
-</div>
+<div class="login-container">
 
-<!-- LOGIN BOX -->
-<div class="container">
-  <div class="login-box">
+  <div class="login-card">
 
-    <h2>Attendance Management System</h2>
+    <h1>🎓 Attendance Portal</h1>
 
-    <!-- KEEP YOUR ORIGINAL FIELDS -->
-    <input type="email" id="email" placeholder="Enter Email">
+    <input type="email" id="email" placeholder="Email">
 
-    <input type="password" id="password" placeholder="Enter Password">
+    <input type="password" id="password" placeholder="Password">
 
     <select id="role">
       <option value="student">Student</option>
@@ -107,7 +23,13 @@
 
     <button onclick="login()">Login</button>
 
+    <div class="links">
+      <a href="register.html">Register</a>
+      <a href="forgot.html">Forgot Password?</a>
+    </div>
+
   </div>
+
 </div>
 
 <script src="script.js"></script>

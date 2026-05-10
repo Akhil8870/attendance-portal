@@ -2,70 +2,100 @@
 <html>
 <head>
   <title>Select Class</title>
+  <link rel="stylesheet" href="style.css">
 </head>
+<body>
 
-<body style="font-family:Arial;text-align:center;margin-top:120px;">
+<div class="navbar">
+  <div class="logo">🎓 Attendance Portal</div>
 
-<h2>Select Class</h2>
+  <div>
+    <button onclick="home()">🏠 Home</button>
+    <button onclick="logout()">🚪 Logout</button>
+  </div>
+</div>
 
-<!-- DEPARTMENT -->
-<select id="dept">
-  <option value="">Select Department</option>
-  <option value="CSE">CSE</option>
-  <option value="IT">IT</option>
-  <option value="ECE">ECE</option>
-  <option value="EEE">EEE</option>
-  <option value="MECH">MECH</option>
-</select>
+<div class="page-center">
 
-<br><br>
+  <div class="card select-card">
 
-<!-- YEAR -->
-<select id="year">
-  <option value="">Select Year</option>
-  <option value="1">1</option>
-  <option value="2">2</option>
-  <option value="3">3</option>
-  <option value="4">4</option>
-</select>
+    <h2>Select Class</h2>
 
-<br><br>
+    <div class="grid">
 
-<!-- SEMESTER -->
-<select id="sem">
-  <option value="">Select Semester</option>
-  <option value="1">1</option>
-  <option value="2">2</option>
-</select>
+      <select id="dept">
+        <option value="">Department</option>
+        <option value="CSE">CSE</option>
+        <option value="IT">IT</option>
+        <option value="ECE">ECE</option>
+        <option value="EEE">EEE</option>
+        <option value="Civil">Civil</option>
+        <option value="Mech">Mech</option>
+        <option value="AIML">AIML</option>
+      </select>
 
-<br><br>
+      <select id="year">
+        <option value="">Year</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
 
-<!-- SECTION -->
-<select id="sec">
-  <option value="">Select Section</option>
-  <option value="A">A</option>
-  <option value="B">B</option>
-</select>
+      <select id="semester">
+        <option value="">Semester</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+      </select>
 
-<br><br>
+      <select id="section">
+        <option value="">Section</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+      </select>
 
-<button onclick="go()">Next</button>
+    </div>
+
+    <button class="full-btn" onclick="goNext()">Continue →</button>
+
+  </div>
+
+</div>
 
 <script>
-function go() {
+
+function goNext() {
+
   const dept = document.getElementById("dept").value;
   const year = document.getElementById("year").value;
-  const sem = document.getElementById("sem").value;
-  const sec = document.getElementById("sec").value;
+  const semester = document.getElementById("semester").value;
+  const section = document.getElementById("section").value;
 
-  if (!dept || !year || !sem || !sec) {
+  if (!dept || !year || !semester || !section) {
     alert("Please select all fields");
     return;
   }
 
-  window.location.href =
-    `staff.html?dept=${dept}&year=${year}&semester=${sem}&section=${sec}`;
+  location.href =
+  `staff.html?dept=${dept}&year=${year}&semester=${semester}&section=${section}`;
 }
+
+function home() {
+  location.href = "index.html";
+}
+
+function logout() {
+  location.href = "index.html";
+}
+
 </script>
 
 </body>
