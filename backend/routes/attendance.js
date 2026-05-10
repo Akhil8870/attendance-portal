@@ -1,6 +1,6 @@
 const router = require("express").Router();
-const Attendance = require("../models/attendance");
-const Student = require("../models/student");
+const Attendance = require("../models/Attendance");
+const Student = require("../models/Student");
 
 router.post("/", async (req, res) => {
 

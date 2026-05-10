@@ -257,3 +257,30 @@ th,td{
   font-size:24px;
   font-weight:bold;
 }
+/* TOP HEADER */
+
+.top-header {
+  width: 100%;
+  background: white;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 2px solid #eee;
+}
+
+/* COLLEGE LOGO */
+
+.college-logo {
+  height: 60px;
+  object-fit: contain;
+}
+
+/* SMALL SUBTITLE */
+
+.subtitle {
+  text-align: center;
+  color: gray;
+  margin-bottom: 15px;
+  font-size: 14px;
+}

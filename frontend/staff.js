@@ -1,6 +1,6 @@
 const API = window.location.origin;
 
-const params = new URLSearchParams(location.search);
+const params = new URLSearchParams(window.location.search);
 
 const dept = params.get("dept");
 const year = params.get("year");
@@ -11,6 +11,8 @@ let students = [];
 let editId = null;
 
 window.onload = loadStudents;
+
+/* ================= LOAD STUDENTS ================= */
 
 async function loadStudents() {
 
@@ -23,6 +25,8 @@ async function loadStudents() {
   renderTable();
 }
 
+/* ================= RENDER TABLE ================= */
+
 async function renderTable() {
 
   const date = document.getElementById("date").value;
@@ -31,133 +35,130 @@ async function renderTable() {
 
   for (let s of students) {
 
-    const attRes = await fetch(
+    const res = await fetch(
       `${API}/api/attendance/${s._id}`
     );
 
-    const attendance = await attRes.json();
+    const attendance = await res.json();
 
     let selectedStatus = "";
 
     if (date) {
-
       const record = attendance.find(a => a.date === date);
-
-      if (record) {
-        selectedStatus = record.status;
-      }
+      if (record) selectedStatus = record.status;
     }
 
-    let present = attendance.filter(
+    let presentCount = attendance.filter(
       a => a.status === "Present" || a.status === "OD"
     ).length;
 
     let total = attendance.length || 1;
 
-    let percent = Math.round((present / total) * 100);
+    let percent = Math.round((presentCount / total) * 100);
 
     html += `
-    
-    <tr>
+      <tr>
 
-      <td>
-        <input type="checkbox" class="rowCheck">
-      </td>
+        <td>
+          <input type="checkbox"
+          class="rowCheck"
+          data-id="${s._id}">
+        </td>
 
-      <td>${s.name}</td>
+        <td>${s.name}</td>
 
-      <td>${s.rollNo}</td>
+        <td>${s.rollNo}</td>
 
-      <td>
+        <td>
+          <select id="st-${s._id}">
+            <option value="">Select</option>
+            <option value="Present"
+            ${selectedStatus === "Present" ? "selected" : ""}>
+            Present
+            </option>
 
-        <select id="st-${s._id}">
+            <option value="Absent"
+            ${selectedStatus === "Absent" ? "selected" : ""}>
+            Absent
+            </option>
 
-          <option value="">
-            Select
-          </option>
+            <option value="OD"
+            ${selectedStatus === "OD" ? "selected" : ""}>
+            OD
+            </option>
 
-          <option value="Present"
-          ${selectedStatus === "Present" ? "selected" : ""}>
-          Present
-          </option>
+          </select>
+        </td>
 
-          <option value="Absent"
-          ${selectedStatus === "Absent" ? "selected" : ""}>
-          Absent
-          </option>
+        <td style="color:${percent < 75 ? 'red' : 'green'}; font-weight:bold;">
+          ${percent}%
+        </td>
 
-          <option value="OD"
-          ${selectedStatus === "OD" ? "selected" : ""}>
-          OD
-          </option>
+        <td>
 
-        </select>
+          <button onclick="editStudent(
+            '${s._id}',
+            '${s.name}',
+            '${s.rollNo}'
+          )">✏️</button>
 
-      </td>
+          <button class="danger-btn"
+          onclick="deleteStudent('${s._id}')">
+          🗑
+          </button>
 
-      <td style="
-      color:${percent < 75 ? 'red' : 'green'};
-      font-weight:bold;
-      ">
+        </td>
 
-      ${percent}%
-
-      </td>
-
-      <td>
-
-        <button onclick="editStudent(
-          '${s._id}',
-          '${s.name}',
-          '${s.rollNo}'
-        )">
-        ✏️
-        </button>
-
-        <button class="danger-btn"
-        onclick="deleteStudent('${s._id}')">
-        🗑
-        </button>
-
-      </td>
-
-    </tr>
-    
+      </tr>
     `;
   }
 
   document.getElementById("table").innerHTML = html;
 }
 
-document.addEventListener("change", function(e) {
+/* ================= DATE CHANGE ================= */
 
+document.addEventListener("change", function (e) {
   if (e.target.id === "date") {
     renderTable();
   }
 });
 
+/* ================= SELECT ALL ================= */
+
+document.getElementById("selectAll").addEventListener("change", function () {
+
+  const checked = this.checked;
+
+  document.querySelectorAll(".rowCheck").forEach(cb => {
+    cb.checked = checked;
+  });
+});
+
+/* ================= BULK UPDATE ================= */
+
 function bulkUpdate(status) {
 
-  const checks =
-  document.querySelectorAll(".rowCheck");
+  document.querySelectorAll(".rowCheck").forEach(cb => {
 
-  checks.forEach((c, index) => {
+    if (cb.checked) {
 
-    if (c.checked) {
+      const id = cb.getAttribute("data-id");
 
-      const student = students[index];
+      const select = document.getElementById(`st-${id}`);
 
-      document.getElementById(
-        `st-${student._id}`
-      ).value = status;
+      if (select) {
+        select.value = status;
+      }
     }
   });
 }
 
+/* ================= SAVE ATTENDANCE ================= */
+
 async function saveAttendance() {
 
-  const date =
-  document.getElementById("date").value;
+  const date = document.getElementById("date").value;
 
   if (!date) {
     alert("Select date");
@@ -167,9 +168,7 @@ async function saveAttendance() {
   for (let s of students) {
 
     const status =
-    document.getElementById(
-      `st-${s._id}`
-    ).value;
+      document.getElementById(`st-${s._id}`).value;
 
     if (!status) continue;
 
@@ -182,42 +181,33 @@ async function saveAttendance() {
       },
 
       body: JSON.stringify({
-
         studentId: s._id,
         date,
         status
-
       })
 
     });
   }
 
-  alert("Attendance Saved");
+  alert("Attendance Saved ✔");
 
   renderTable();
 }
 
-function openAdd() {
+/* ================= ADD STUDENT ================= */
 
-  document.getElementById(
-    "addModal"
-  ).style.display = "flex";
+function openAdd() {
+  document.getElementById("addModal").style.display = "flex";
 }
 
 function closeAdd() {
-
-  document.getElementById(
-    "addModal"
-  ).style.display = "none";
+  document.getElementById("addModal").style.display = "none";
 }
 
 async function addStudent() {
 
-  const name =
-  document.getElementById("name").value;
-
-  const roll =
-  document.getElementById("roll").value;
+  const name = document.getElementById("name").value;
+  const roll = document.getElementById("roll").value;
 
   await fetch(`${API}/api/students`, {
 
@@ -228,14 +218,12 @@ async function addStudent() {
     },
 
     body: JSON.stringify({
-
       name,
       rollNo: roll,
       dept,
       year,
       semester,
       section
-
     })
 
   });
@@ -245,24 +233,20 @@ async function addStudent() {
   loadStudents();
 }
 
+/* ================= EDIT ================= */
+
 function editStudent(id, name, roll) {
 
   editId = id;
 
   document.getElementById("ename").value = name;
-
   document.getElementById("eroll").value = roll;
 
-  document.getElementById(
-    "editModal"
-  ).style.display = "flex";
+  document.getElementById("editModal").style.display = "flex";
 }
 
 function closeEdit() {
-
-  document.getElementById(
-    "editModal"
-  ).style.display = "none";
+  document.getElementById("editModal").style.display = "none";
 }
 
 async function updateStudent() {
@@ -276,13 +260,8 @@ async function updateStudent() {
     },
 
     body: JSON.stringify({
-
-      name:
-      document.getElementById("ename").value,
-
-      rollNo:
-      document.getElementById("eroll").value
-
+      name: document.getElementById("ename").value,
+      rollNo: document.getElementById("eroll").value
     })
 
   });
@@ -292,11 +271,11 @@ async function updateStudent() {
   loadStudents();
 }
 
+/* ================= DELETE ================= */
+
 async function deleteStudent(id) {
 
-  const ok = confirm("Delete student?");
-
-  if (!ok) return;
+  if (!confirm("Delete student?")) return;
 
   await fetch(`${API}/api/students/${id}`, {
     method: "DELETE"
@@ -305,29 +284,26 @@ async function deleteStudent(id) {
   loadStudents();
 }
 
+/* ================= EXPORT EXCEL ================= */
+
 function exportExcel() {
 
-  const date =
-  document.getElementById("date").value;
+  const date = document.getElementById("date").value;
 
   if (!date) {
-    alert("Select Date");
+    alert("Select date");
     return;
   }
 
-  let exportData = [];
+  let data = [];
 
   students.forEach(s => {
 
-    const status =
-    document.getElementById(
-      `st-${s._id}`
-    ).value;
+    const status = document.getElementById(`st-${s._id}`).value;
 
     if (!status) return;
 
-    exportData.push({
-
+    data.push({
       Date: date,
       Name: s.name,
       Roll: s.rollNo,
@@ -336,24 +312,14 @@ function exportExcel() {
       Year: year,
       Semester: semester,
       Section: section
-
     });
+
   });
 
-  const ws =
-  XLSX.utils.json_to_sheet(exportData);
+  const ws = XLSX.utils.json_to_sheet(data);
+  const wb = XLSX.utils.book_new();
 
-  const wb =
-  XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Attendance");
 
-  XLSX.utils.book_append_sheet(
-    wb,
-    ws,
-    "Attendance"
-  );
-
-  XLSX.writeFile(
-    wb,
-    `Attendance_${date}.xlsx`
-  );
+  XLSX.writeFile(wb, `Attendance_${date}.xlsx`);
 }
