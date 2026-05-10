@@ -2,10 +2,7 @@ const mongoose = require("mongoose");
 
 module.exports = mongoose.model("Student", {
   name: String,
-  rollNo: {
-    type: String,
-    unique: true
-  },
+  rollNo: String,
   dept: String,
   year: String,
   semester: String,
